@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        const countryList = [[${countries}]];
+        const currencyQuoteList = [[${quotes}]];
+
+        let countryQuote;
+        let currencyRate;
+        let countryCode;
+
+        // 송금하기 처리
+        function getResultTransferAmount() {
+
+            let transferAmount = Number($("#transferAmount").val()); // 송금액
+
+            // 송금액 검증
+            if(isNaN(transferAmount)) {
+                $("#message").text("송금액이 바르지 않습니다.").css("color","red");
+            } else {
+
+                if(transferAmount < 0 || transferAmount > 10000) {
+                    $("#message").text("송금액이 바르지 않습니다.").css("color","red");
+                } else {
+                    let result = transferAmount * currencyRate;
+                    $("#message")
+                        .text("수취금액은 " + result.toLocaleString(undefined, {maximumFractionDigits: 2} ) + " " + countryCode +  " 입니다.")
+                        .css("color","black");
+                }
+            }
+        }
+
+        // itemId 로 currencyRate 찾기
+        function getCurrencyRate(itemId) {
+            countryList.forEach(element => {
+                if(itemId == element.countryId) {
+                    countryQuote = element.countryQuote;
+                    countryCode = element.countryCode;
+                }
+            });
+
+            currencyQuoteList.forEach(element => {
+                if(countryQuote == element.countryQuote) {
+                    currencyRate = element.currencyRate;
+                }
+            })
+
+            $("#rate").text("환율: " + currencyRate.toLocaleString(undefined, {maximumFractionDigits: 2}));
+
+        }
+
+        // select box 변경
+        $(function() {
+            $('#itemId').click(function() {
+                let itemId = $("#itemId").val(); // 콤보박스에서 선택한 countryId
+                getCurrencyRate(itemId);
+            });
+        })
+
+        // init
+        $(document).ready(function(){
+
+            let itemId = $("#itemId").val(); // 콤보박스에서 선택한 countryId
+            getCurrencyRate(itemId);
+
+        });
+
+        /*]]>*/
+    </script>
+
+    <body>
+            <h1>환율 계산</h1><br><br>
+
+            <div>
+                <p>송금국가: 미국(USD)</p>
+            </div>
+            <div>
+                <p>수취국가:
+                    <select class="select" name="itemName" id="itemId">
+                        <option th:each="item : ${countries}"
+                                th:value="${item.countryId}"
+                                th:text="${item.countryName} + '(' + ${item.countryCode} + ')'">
+                        </option>
+                    </select>
+                </p>
+            </div>
+
+            <div>
+                <p id="rate"> </p>
+            </div>
+
+            <div>
+                <p>송금액: <input type="text" th:id="transferAmount"/>
+                </p>
+            </div>
+
+            <div>
+                <button type="button" onclick="getResultTransferAmount()" >송금하기</button>
+            </div>
+
+            <div>
+                <p id="message"> </p>
+            </div>
+    </body>
+</html>
