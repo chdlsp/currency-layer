@@ -1,4 +1,6 @@
-com/currency/application/GetCurrentCurrencyInfoServiceTests.java
- com.currency.application.GetCurrentCurrencyInfoServiceTests
 com/currency/CurrencyLayerApplicationTests.java
  com.currency.CurrencyLayerApplicationTests
+com/currency/application/GetCurrentCurrencyInfoServiceTests.java
+ com.currency.application.GetCurrentCurrencyInfoServiceTests
+com/currency/controller/SendMoneyControllerTests.java
+ com.currency.controller.SendMoneyControllerTests
