@@ -2,6 +2,9 @@ package com.currency.application;
 
 import com.currency.entity.model.Country;
 import com.currency.entity.vo.CurrencyQuoteVO;
+import com.currency.exception.ClientProtocolServiceException;
+import com.currency.exception.IOServiceException;
+import com.currency.exception.ParsingServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
@@ -54,17 +57,11 @@ public class GetCurrnetCurrencyInfoService {
             response.close();
 
         } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ClientProtocolServiceException();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new IOServiceException();
+        } catch (ParseException | JSONException e) {
+            throw new ParsingServiceException();
         }
 
         return currencyQuoteList;
