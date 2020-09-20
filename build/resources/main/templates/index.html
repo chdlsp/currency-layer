@@ -18,10 +18,13 @@
         // 송금하기 처리
         function getResultTransferAmount() {
 
-            let transferAmount = Number($("#transferAmount").val()); // 송금액
+            let validCheck = $("#transferAmount").val();
+            let transferAmount = Number(validCheck); // 송금액
 
             // 송금액 검증
-            if(isNaN(transferAmount)) {
+            if(typeof validCheck === 'undefined' || validCheck === null || validCheck === "") {
+                $("#message").text("송금액이 바르지 않습니다.").css("color","red");
+            } else if(isNaN(transferAmount)) {
                 $("#message").text("송금액이 바르지 않습니다.").css("color","red");
             } else {
 
@@ -51,7 +54,7 @@
                 }
             })
 
-            $("#rate").text("환율: " + currencyRate.toLocaleString(undefined, {maximumFractionDigits: 2}));
+            $("#rate").text("환율: " + currencyRate.toLocaleString(undefined, {maximumFractionDigits: 2}) + " " + countryCode + "/USD");
 
         }
 
@@ -96,7 +99,8 @@
             </div>
 
             <div>
-                <p>송금액: <input type="text" th:id="transferAmount"/>
+                <p>송금액: <input type="text"
+                                th:id="transferAmount"/> USD
                 </p>
             </div>
 
